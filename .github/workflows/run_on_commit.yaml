@@ -6,21 +6,16 @@ on:
   #   branches:
   #     - master
 
-  # schedule:
-  #   - cron:  '0 1 * * *'
-    
   workflow_dispatch:
 
 env:
   VIDEO_URL: ${{ github.event.head_commit.message }}
   SERVER:    'londonparkour.com'
-  USER:      ${{secrets.USER}}
-  PASSWORD:  ${{secrets.PASSWORD}}
 
 jobs:
 
   build:
-    runs-on: londonparkour/autoflip
+    runs-on: docker://londonparkour/autoflip
 
     steps:
 
@@ -40,13 +35,21 @@ jobs:
       - name: Setup tools
         run: |
           apt-get update
-          apt-get install -y rsync ssh
+          apt-get install -y rsync ssh sshpass
 
 
-      # DEBUG with NGROK.
-      - name: Start SSH session
-        uses: luchihoratiu/debug-via-ssh@main
-        with:
-          NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
-          SSH_PASS: ${{ secrets.NGROK_SSH_PASS }}
-          NGROK_REGION: eu
+
+      - name: Copy Video to Server
+        run: |
+          mkdir ~/.ssh
+          ssh-keyscan -H londonparkour.com >> ~/.ssh/known_hosts
+          sshpass -p '${{secrets.PASSWORD}}' scp /video/video_crop.mp4 ${{secrets.USER}}@${{env.SERVER}}:/home/ios/videos
+
+
+      # # DEBUG with NGROK.
+      # - name: Start SSH session
+      #   uses: luchihoratiu/debug-via-ssh@main
+      #   with:
+      #     NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+      #     SSH_PASS: ${{ secrets.NGROK_SSH_PASS }}
+      #     NGROK_REGION: eu
