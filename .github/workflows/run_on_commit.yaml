@@ -55,8 +55,8 @@ jobs:
           mkdir ~/.ssh
           ssh-keyscan -H ${{env.SERVER}} >> ~/.ssh/known_hosts
 
-          FOLDER_DATE=$(echo $INPUT | cut -d / -f5)
-          FOLDER_CATEGORY=$(echo $INPUT | cut -d / -f6)
+          FOLDER_DATE=$(echo $VIDEO_URL | cut -d / -f5)
+          FOLDER_CATEGORY=$(echo $VIDEO_URL | cut -d / -f6)
 
           TARGET_DIR="${TARGET_ROOT_FOLDER}/${FOLDER_DATE}/${FOLDER_CATEGORY}/autoflip"
           echo "TARGET_DIR: ${TARGET_DIR}"
