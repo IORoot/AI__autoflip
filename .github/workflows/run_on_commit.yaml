@@ -20,7 +20,7 @@ jobs:
     steps:
 
       - name: My first step
-        uses: docker://londonparkour.com/autoflip
+        uses: docker://londonparkour/autoflip
 
 
       # - name: download video from url
