@@ -1,0 +1,38 @@
+name: Autoflip Salient Crop
+
+on:
+
+  # push:
+  #   branches:
+  #     - master
+
+  # schedule:
+  #   - cron:  '0 1 * * *'
+    
+  workflow_dispatch:
+
+
+jobs:
+
+  build:
+    runs-on: londonparkour/autoflip:latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Download source video
+        run: |  
+
+            # Copy scripts here.
+            echo "📥 Downloading video to /videos"
+
+
+
+      # # DEBUG with NGROK.
+      # - name: Start SSH session
+      #   uses: luchihoratiu/debug-via-ssh@main
+      #   with:
+      #     NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+      #     SSH_PASS: ${{ secrets.NGROK_SSH_PASS }}
+      #     NGROK_REGION: eu
