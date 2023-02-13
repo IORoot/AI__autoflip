@@ -9,7 +9,8 @@ on:
   workflow_dispatch:
 
 env:
-  VIDEO_URL: ${{ github.event.head_commit.message }}
+  VIDEO_URL: 'https://londonparkour.com/wp-content/uploads/Essential/Epic-Slider/stranglers_min.mp4'
+  # VIDEO_URL: ${{ github.event.head_commit.message }}
   SERVER:    'londonparkour.com'
 
 jobs:
@@ -33,7 +34,7 @@ jobs:
 
       - name: download video from url
         run: |
-            wget -O /videos/video.mp4 ${{ env.VIDEO_URL }}
+            wget ${{ env.VIDEO_URL }} -O /videos/video.mp4
 
 
       - name: run autoflip
