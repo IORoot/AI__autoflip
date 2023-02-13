@@ -21,8 +21,6 @@ jobs:
 
       - name: My first step
         uses: docker://londonparkour.com/autoflip
-        run: |
-            wget -O /videos/video.mp4 ${{ env.VIDEO_URL }}
 
 
       # - name: download video from url
