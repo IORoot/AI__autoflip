@@ -15,22 +15,25 @@ env:
 jobs:
 
   build:
+
+
     runs-on: ubuntu-latest
     container:
-        image: docker://londonparkour/autoflip:latest
-    
+      image: docker://londonparkour/autoflip:latest
+    volumes:
+      - /tmp:/videos
     
     steps:
 
-      - name: My first step
-        uses: docker://londonparkour/autoflip
-        with:
-          entrypoint: /bin/echo "hello"
+      # - name: My first step
+      #   uses: docker://londonparkour/autoflip
+      #   with:
+      #     entrypoint: /bin/echo "hello"
 
 
-      # - name: download video from url
-      #   run: |
-      #       wget -O /videos/video.mp4 ${{ env.VIDEO_URL }}
+      - name: download video from url
+        run: |
+            wget -O /videos/video.mp4 ${{ env.VIDEO_URL }}
 
 
       - name: run autoflip
