@@ -22,7 +22,7 @@ jobs:
     container:
       image: docker://londonparkour/autoflip:latest
       volumes:
-        - /tmp:/videos
+        - /tmp:/video
       
     steps:
 
@@ -34,7 +34,7 @@ jobs:
 
       - name: download video from url
         run: |
-            wget ${{ env.VIDEO_URL }} -O /videos/video.mp4
+            wget ${{ env.VIDEO_URL }} -O /video/video.mp4
 
 
       - name: run autoflip
