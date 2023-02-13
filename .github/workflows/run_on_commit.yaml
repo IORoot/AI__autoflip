@@ -21,8 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: docker://londonparkour/autoflip:latest
-      volumes:
-        - /tmp:/video
       
     steps:
 
@@ -35,6 +33,7 @@ jobs:
       - name: download video from url
         run: |
             wget ${{ env.VIDEO_URL }} -O /video/video.mp4
+            wget https://londonparkour.com/wp-content/uploads/Essential/Epic-Slider/stranglers_min.mp4 -O /video/video2.mp4
 
 
       - name: run autoflip
@@ -42,6 +41,7 @@ jobs:
             cd /mediapipe
             echo ${input_video}
             ls -la
+            ls -la /video
             env
             /bin/sh -c bazel-bin/mediapipe/examples/desktop/autoflip/run_autoflip --calculator_graph_config_file=${config} --input_side_packets= input_video_path=/video/${input_video},output_video_path=/video/${output_video},aspect_ratio=${aspect_ratio},key_frame_crop_viz_frames_path=/video/${points_output},salient_point_viz_frames_path=/video/${frames_output}
 
