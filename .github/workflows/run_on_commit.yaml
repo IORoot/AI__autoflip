@@ -58,7 +58,7 @@ jobs:
           FOLDER_DATE=$(echo $VIDEO_URL | cut -d / -f5)
           FOLDER_CATEGORY=$(echo $VIDEO_URL | cut -d / -f6)
 
-          TARGET_DIR="${TARGET_ROOT_FOLDER}/${FOLDER_DATE}/${FOLDER_CATEGORY}/autoflip"
+          TARGET_DIR="${TARGET_ROOT_FOLDER}/${FOLDER_DATE}/${FOLDER_CATEGORY}/autoflip/"
           echo "TARGET_DIR: ${TARGET_DIR}"
           mkdir -p ${TARGET_DIR}
 
