@@ -45,7 +45,7 @@ jobs:
       - name: Setup tools
         run: |
           apt-get update
-          apt-get install -y rsync ssh sshpass pwsh
+          apt-get install -y rsync ssh sshpass
 
 
 
