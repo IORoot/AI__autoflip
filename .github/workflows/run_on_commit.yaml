@@ -55,4 +55,4 @@ jobs:
           mkdir ~/.ssh
           ssh-keyscan -H ${{env.SERVER}} >> ~/.ssh/known_hosts
           ls -la /video
-          sshpass -p '${{secrets.PASSWORD}}' scp /video/video_crop.mp4 ${{secrets.USER}}@${{env.SERVER}}:/home/ios/videos
+          sshpass -p '${{secrets.PASSWORD}}' scp StrictHostKeyChecking=no /video/video_crop.mp4 ${{secrets.USER}}@${{env.SERVER}}:/home/ios/videos
