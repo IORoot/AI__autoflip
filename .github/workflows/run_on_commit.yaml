@@ -43,18 +43,18 @@ jobs:
 
 
 
-
       - name: Setup tools
         run: |
           apt-get update
-          apt-get install -y rsync ssh sshpass
+          apt-get install -y ssh sshpass
 
 
 
       - name: Copy Video to Server
         run: |
           mkdir ~/.ssh
-          ssh-keyscan -H londonparkour.com >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{env.SERVER}} >> ~/.ssh/known_hosts
+          ls -la /videos
           sshpass -p '${{secrets.PASSWORD}}' scp /video/video_crop.mp4 ${{secrets.USER}}@${{env.SERVER}}:/home/ios/videos
 
 
