@@ -13,6 +13,11 @@ env:
   VIDEO_URL:            ${{ github.event.head_commit.message }}
   SERVER:               'londonparkour.com'
   TARGET_ROOT_FOLDER:   '/var/www/vhosts/media.londonparkour.com/videos'
+  aspect_ratio:         '1:1'
+  # input_video:          'video.mp4'
+  # output_video:         'video_crop.mp4'
+  # points_output:        'video_points.mp4'
+  # frames_output:        'video_frames.mp4'
 
 jobs:
 
@@ -68,8 +73,5 @@ jobs:
 
           SOURCE_DIR="/video/autoflip"
           TARGET_DIR="${TARGET_ROOT_FOLDER}/${FOLDER_DATE}/${FOLDER_CATEGORY}/"
-
-          echo "SOURCE DIR: ${SOURCE_DIR}"
-          echo "TARGET DIR: ${TARGET_DIR}"
 
           sshpass -p '${{secrets.PASSWORD}}' scp -v -p -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SOURCE_DIR} ${{secrets.USER}}@${{env.SERVER}}:${TARGET_DIR}
