@@ -54,14 +54,5 @@ jobs:
         run: |
           mkdir ~/.ssh
           ssh-keyscan -H ${{env.SERVER}} >> ~/.ssh/known_hosts
-          ls -la /videos
+          ls -la /video
           sshpass -p '${{secrets.PASSWORD}}' scp /video/video_crop.mp4 ${{secrets.USER}}@${{env.SERVER}}:/home/ios/videos
-
-
-      # # DEBUG with NGROK.
-      # - name: Start SSH session
-      #   uses: luchihoratiu/debug-via-ssh@main
-      #   with:
-      #     NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
-      #     SSH_PASS: ${{ secrets.NGROK_SSH_PASS }}
-      #     NGROK_REGION: eu
