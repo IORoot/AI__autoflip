@@ -20,9 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: docker://londonparkour/autoflip:latest
-    volumes:
-      - /tmp:/videos
-    
+      volumes:
+        - /tmp:/videos
+      
     steps:
 
       # - name: My first step
