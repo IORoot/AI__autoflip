@@ -16,11 +16,16 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-
+    container:
+        image: docker://londonparkour/autoflip:latest
+    
+    
     steps:
 
       - name: My first step
         uses: docker://londonparkour/autoflip
+        with:
+          entrypoint: /bin/echo "hello"
 
 
       # - name: download video from url
