@@ -34,19 +34,20 @@ jobs:
       - name: download video from url
         run: |
             wget ${{ env.VIDEO_URL }} -O /video/video.mp4
+            mkdir -p /video/autoflip
 
 
       - name: run autoflip
         run: |
             cd /mediapipe
-            /bin/sh -c "bazel-bin/mediapipe/examples/desktop/autoflip/run_autoflip --calculator_graph_config_file=/mediapipe/${config} --input_side_packets=input_video_path=/video/${input_video},output_video_path=/video/${output_video},aspect_ratio=${aspect_ratio},key_frame_crop_viz_frames_path=/video/${points_output},salient_point_viz_frames_path=/video/${frames_output}" || true
+            /bin/sh -c "bazel-bin/mediapipe/examples/desktop/autoflip/run_autoflip --calculator_graph_config_file=/mediapipe/${config} --input_side_packets=input_video_path=/video/${input_video},output_video_path=/video/autoflip/${output_video},aspect_ratio=${aspect_ratio},key_frame_crop_viz_frames_path=/video/${points_output},salient_point_viz_frames_path=/video/${frames_output}" || true
 
 
 
       - name: Setup tools
         run: |
           apt-get update
-          apt-get install -y ssh sshpass
+          apt-get install -y rsync ssh sshpass
 
 
 
@@ -58,9 +59,11 @@ jobs:
           FOLDER_DATE=$(echo $VIDEO_URL | cut -d / -f5)
           FOLDER_CATEGORY=$(echo $VIDEO_URL | cut -d / -f6)
 
-          TARGET_DIR="${TARGET_ROOT_FOLDER}/${FOLDER_DATE}/${FOLDER_CATEGORY}/autoflip/"
-          echo "MAKE TARGET_DIR: ${TARGET_DIR}"
-          sshpass -p '${{secrets.PASSWORD}}' ssh -v -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{secrets.USER}}@${{env.SERVER}} 'mkdir -p ${TARGET_DIR}'
+          SOURCE_DIR="/video/autoflip"
+          TARGET_DIR="${TARGET_ROOT_FOLDER}/${FOLDER_DATE}/${FOLDER_CATEGORY}/"
+          echo "Try RSYNC: ${TARGET_DIR}"
 
-          echo "COPY FILE: ${TARGET_DIR}/video_autoflip.mp4"
-          sshpass -p '${{secrets.PASSWORD}}' scp -v -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null /video/video_crop.mp4 ${{secrets.USER}}@${{env.SERVER}}:${TARGET_DIR}/video_autoflip.mp4
+          echo "SOURCE DIR: ${SOURCE_DIR}"
+          echo "TARGET DIR: ${TARGET_DIR}"
+
+          sshpass -p '${{secrets.PASSWORD}}' scp -v -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SOURCE_DIR} ${{secrets.USER}}@${{env.SERVER}}:${TARGET_DIR}
