@@ -1,5 +1,24 @@
 name: Autoflip Salient Crop
 
+# ╭──────────────────────────────────────────────────────────────────────────────╮
+# │                                                                              │
+# │                           You can run in two ways:                           │
+# │                                                                              │
+# │   1. With a Commit with the URL of the input video as the commit message.    │
+# │                                                                              │
+# │                           2. With a CURL request:                            │
+# │                                    curl \                                    │
+# │                                  -X POST \                                   │
+# │                  -H "Accept: application/vnd.github+json" \                  │
+# │                  -H "Authorization: Bearer GITHUB_PAT_KEY"\                  │
+# │                   -H "X-GitHub-Api-Version: 2022-11-28" \                    │
+# │        https://api.github.com/repos/ioroot/AI__autoflip/dispatches \         │
+# │        -d '{"event_type":"run_autoflip","client_payload":{         \         │
+# │           "VIDEO_URL":  "HTTP://VIDEOURL.COM/VIDEO.MP4",        \            │
+# │                           "ASPECT_RATIO":"1:2"}}'                            │
+# │                                                                              │
+# │                                                                              │
+# ╰──────────────────────────────────────────────────────────────────────────────╯
 on:
 
   # push:
@@ -14,16 +33,31 @@ on:
     types: run_autoflip
 
 env:
+
+  
+  # ╭──────────────────────────────────────────────────────────╮
+  # │                        Video URL                         │
+  # │        1. Get Data from CURL request and webhook         │
+  # │            2. or Get URL from commit message             │
+  # ╰──────────────────────────────────────────────────────────╯
+  VIDEO_URL:            ${{ github.event.client_payload.VIDEO_URL || github.event.head_commit.message }} 
   # VIDEO_URL:            'https://londonparkour.com/wp-content/uploads/Essential/Epic-Slider/stranglers_min.mp4'     # Hard coded
-  # VIDEO_URL:            ${{ github.event.head_commit.message }}                 # Get URL from commit message
-  VIDEO_URL:            ${{ github.event.client_payload.VIDEO_URL }}            # Get Data from CURL request and webhook
+
+  # ╭──────────────────────────────────────────────────────────╮
+  # │              Where to upload the result to.              │
+  # │                      - Server name                       │
+  # │                     - Target folder.                     │
+  # ╰──────────────────────────────────────────────────────────╯
   SERVER:               'londonparkour.com'
   TARGET_ROOT_FOLDER:   '/var/www/vhosts/media.londonparkour.com/videos'
-  aspect_ratio:         '1:1'
-  # input_video:          'video.mp4'
-  # output_video:         'video_crop.mp4'
-  # points_output:        'video_points.mp4'
-  # frames_output:        'video_frames.mp4'
+
+  # ╭──────────────────────────────────────────────────────────╮
+  # │                Aspect Ratio to output as.                │
+  # ╰──────────────────────────────────────────────────────────╯
+  ASPECT_RATIO:         ${{ github.event.client_payload.ASPECT_RATIO || 1:1 }} 
+
+
+
 
 jobs:
 
@@ -43,11 +77,15 @@ jobs:
       - name: Test the repository_dispatch fields
         run: |
           echo "VIDEO_URL: ${VIDEO_URL}"
+          echo "ASPECT_RATIO: ${ASPECT_RATIO}"
+
+
 
       - name: download video from url
         run: |
             wget ${VIDEO_URL} -O /video/video.mp4
             mkdir -p /video/autoflip
+
 
 
       - name: run autoflip
