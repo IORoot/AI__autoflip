@@ -54,7 +54,7 @@ env:
   # ╭──────────────────────────────────────────────────────────╮
   # │                Aspect Ratio to output as.                │
   # ╰──────────────────────────────────────────────────────────╯
-  ASPECT_RATIO:         ${{ github.event.client_payload.ASPECT_RATIO || 1:1 }} 
+  ASPECT_RATIO:         ${{ github.event.client_payload.ASPECT_RATIO || "1:1" }} 
 
 
 
