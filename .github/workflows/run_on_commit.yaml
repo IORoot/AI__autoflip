@@ -2,9 +2,9 @@ name: Autoflip Salient Crop
 
 on:
 
-  push:
-    branches:
-      - master
+  # push:
+  #   branches:
+  #     - master
 
   # Manually via github button
   workflow_dispatch:
