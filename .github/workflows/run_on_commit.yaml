@@ -55,7 +55,8 @@ env:
   # │                Aspect Ratio to output as.                │
   # ╰──────────────────────────────────────────────────────────╯
   ASPECT_RATIO:         ${{ github.event.client_payload.ASPECT_RATIO }} 
-  config:               'development'
+  config:               'autoflip_graph_development.pbtxt'
+  # config:               'autoflip_graph.pbtxt'
 
 
 
@@ -91,7 +92,7 @@ jobs:
       - name: run autoflip
         run: |
             cd /mediapipe
-            /bin/sh -c "bazel-bin/mediapipe/examples/desktop/autoflip/run_autoflip --calculator_graph_config_file=/mediapipe/${config} --input_side_packets=input_video_path=/video/${input_video},output_video_path=/video/autoflip/${output_video},aspect_ratio=${ASPECT_RATIO},key_frame_crop_viz_frames_path=/video/${points_output},salient_point_viz_frames_path=/video/${frames_output}" || true
+            /bin/sh -c "bazel-bin/mediapipe/examples/desktop/autoflip/run_autoflip --calculator_graph_config_file=/mediapipe/mediapipe/examples/desktop/autoflip/${config} --input_side_packets=input_video_path=/video/${input_video},output_video_path=/video/autoflip/${output_video},aspect_ratio=${ASPECT_RATIO},key_frame_crop_viz_frames_path=/video/${points_output},salient_point_viz_frames_path=/video/${frames_output}" || true
 
 
 
