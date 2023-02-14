@@ -7,15 +7,16 @@ on:
   #     - master
 
   # Manually via github button
-  workflow_dispatch:
+  # workflow_dispatch:
 
   # Via a webhook
   repository_dispatch:
     types: run_autoflip
 
 env:
-  # VIDEO_URL:            'https://londonparkour.com/wp-content/uploads/Essential/Epic-Slider/stranglers_min.mp4'
-  VIDEO_URL:            ${{ github.event.head_commit.message }}
+  # VIDEO_URL:            'https://londonparkour.com/wp-content/uploads/Essential/Epic-Slider/stranglers_min.mp4'     # Hard coded
+  # VIDEO_URL:            ${{ github.event.head_commit.message }}                 # Get URL from commit message
+  VIDEO_URL:            ${{ github.event.client_payload.VIDEO_URL }}            # Get Data from CURL request and webhook
   SERVER:               'londonparkour.com'
   TARGET_ROOT_FOLDER:   '/var/www/vhosts/media.londonparkour.com/videos'
   aspect_ratio:         '1:1'
@@ -38,15 +39,14 @@ jobs:
     steps:
 
       # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#repository_dispatch
+      # https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#create-a-repository-dispatch-event
       - name: Test the repository_dispatch fields
-        env: 
-          INPUT_URL: ${{ github.event.client_payload.input_url }}
         run: |
-          echo "INPUT_URL: ${INPUT_URL}"
+          echo "VIDEO_URL: ${VIDEO_URL}"
 
       - name: download video from url
         run: |
-            wget ${{ env.VIDEO_URL }} -O /video/video.mp4
+            wget ${VIDEO_URL} -O /video/video.mp4
             mkdir -p /video/autoflip
 
 
