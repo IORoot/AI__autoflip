@@ -78,8 +78,9 @@ jobs:
       # https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#create-a-repository-dispatch-event
       - name: Test the repository_dispatch fields
         run: |
-          echo "VIDEO_URL: ${VIDEO_URL}"
+          echo "VIDEO_URL: ${{VIDEO_URL}}"
           echo "ASPECT_RATIO: ${{ASPECT_RATIO}}"
+          echo "TARGET_OUTPUT_FOLDER: ${{TARGET_OUTPUT_FOLDER}}"
 
 
 
