@@ -114,7 +114,7 @@ jobs:
           FOLDER_DATE=$(echo $VIDEO_URL | cut -d / -f5)
           FOLDER_CATEGORY=$(echo $VIDEO_URL | cut -d / -f6)
 
-          SOURCE_DIR="/video/autoflip"
+          SOURCE_DIR="/video/${{TARGET_OUTPUT_FOLDER}}"
           TARGET_DIR="${TARGET_ROOT_FOLDER}/${FOLDER_DATE}/${FOLDER_CATEGORY}/"
 
           echo "SOURCE DIR: ${SOURCE_DIR}"
