@@ -87,7 +87,7 @@ jobs:
       - name: download video from url
         run: |
             wget ${VIDEO_URL} -O /video/video.mp4
-            mkdir -p /video/autoflip
+            mkdir -p /video/${TARGET_OUTPUT_FOLDER}
 
 
 
@@ -96,7 +96,8 @@ jobs:
 
             cd /mediapipe
             /bin/sh -c "bazel-bin/mediapipe/examples/desktop/autoflip/run_autoflip --calculator_graph_config_file=/mediapipe/mediapipe/examples/desktop/autoflip/autoflip_graph_development.pbtxt --input_side_packets=input_video_path=/video/${input_video},output_video_path=/video/${TARGET_OUTPUT_FOLDER}/${output_video},aspect_ratio=${ASPECT_RATIO},key_frame_crop_viz_frames_path=/video/${points_output},salient_point_viz_frames_path=/video/${frames_output}" || true
-
+            ls -la /video
+            ls -la /video/${TARGET_OUTPUT_FOLDER}
 
 
       - name: Setup tools
