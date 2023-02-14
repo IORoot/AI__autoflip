@@ -6,7 +6,12 @@ on:
     branches:
       - master
 
+  # Manually via github button
   workflow_dispatch:
+
+  # Via a webhook
+  repository_dispatch:
+    types: run_autoflip
 
 env:
   # VIDEO_URL:            'https://londonparkour.com/wp-content/uploads/Essential/Epic-Slider/stranglers_min.mp4'
@@ -18,7 +23,7 @@ env:
   # output_video:         'video_crop.mp4'
   # points_output:        'video_points.mp4'
   # frames_output:        'video_frames.mp4'
-  
+
 jobs:
 
   build:
@@ -26,15 +31,18 @@ jobs:
 
     runs-on: ubuntu-latest
     container:
+
+      # Run the custom autoflip container.
       image: docker://londonparkour/autoflip:latest
       
     steps:
 
-      # - name: My first step
-      #   uses: docker://londonparkour/autoflip
-      #   with:
-      #     entrypoint: /bin/echo "hello"
-
+      # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#repository_dispatch
+      - name: Test the repository_dispatch fields
+        env: 
+          INPUT_URL: ${{ github.event.client_payload.input_url }}
+        run: |
+          echo "INPUT_URL: ${INPUT_URL}"
 
       - name: download video from url
         run: |
