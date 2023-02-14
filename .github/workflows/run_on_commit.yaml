@@ -78,9 +78,9 @@ jobs:
       # https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#create-a-repository-dispatch-event
       - name: Test the repository_dispatch fields
         run: |
-          echo "VIDEO_URL: ${{VIDEO_URL}}"
-          echo "ASPECT_RATIO: ${{ASPECT_RATIO}}"
-          echo "TARGET_OUTPUT_FOLDER: ${{TARGET_OUTPUT_FOLDER}}"
+          echo "VIDEO_URL: ${VIDEO_URL}"
+          echo "ASPECT_RATIO: ${ASPECT_RATIO}"
+          echo "TARGET_OUTPUT_FOLDER: ${TARGET_OUTPUT_FOLDER}"
 
 
 
@@ -95,7 +95,7 @@ jobs:
         run: |
 
             cd /mediapipe
-            /bin/sh -c "bazel-bin/mediapipe/examples/desktop/autoflip/run_autoflip --calculator_graph_config_file=/mediapipe/mediapipe/examples/desktop/autoflip/autoflip_graph_development.pbtxt --input_side_packets=input_video_path=/video/${input_video},output_video_path=/video/${{TARGET_OUTPUT_FOLDER}}/${output_video},aspect_ratio=${ASPECT_RATIO},key_frame_crop_viz_frames_path=/video/${points_output},salient_point_viz_frames_path=/video/${frames_output}" || true
+            /bin/sh -c "bazel-bin/mediapipe/examples/desktop/autoflip/run_autoflip --calculator_graph_config_file=/mediapipe/mediapipe/examples/desktop/autoflip/autoflip_graph_development.pbtxt --input_side_packets=input_video_path=/video/${input_video},output_video_path=/video/${TARGET_OUTPUT_FOLDER}/${output_video},aspect_ratio=${ASPECT_RATIO},key_frame_crop_viz_frames_path=/video/${points_output},salient_point_viz_frames_path=/video/${frames_output}" || true
 
 
 
@@ -114,7 +114,7 @@ jobs:
           FOLDER_DATE=$(echo $VIDEO_URL | cut -d / -f5)
           FOLDER_CATEGORY=$(echo $VIDEO_URL | cut -d / -f6)
 
-          SOURCE_DIR="/video/${{TARGET_OUTPUT_FOLDER}}"
+          SOURCE_DIR="/video/${TARGET_OUTPUT_FOLDER}"
           TARGET_DIR="${TARGET_ROOT_FOLDER}/${FOLDER_DATE}/${FOLDER_CATEGORY}/"
 
           echo "SOURCE DIR: ${SOURCE_DIR}"
