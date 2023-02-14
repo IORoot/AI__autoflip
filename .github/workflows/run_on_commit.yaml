@@ -50,13 +50,13 @@ env:
   # ╰──────────────────────────────────────────────────────────╯
   SERVER:               'londonparkour.com'
   TARGET_ROOT_FOLDER:   '/var/www/vhosts/media.londonparkour.com/videos'
-  TARGET_OUTPUT_FOLDER: ${{ github.event.client_payload.TARGET_OUTPUT_FOLDER || 'autoflip' }}
+  TARGET_OUTPUT_FOLDER: ${{ github.event.client_payload.TARGET_OUTPUT_FOLDER}}
 
   # ╭──────────────────────────────────────────────────────────╮
   # │                Aspect Ratio to output as.                │
   # ╰──────────────────────────────────────────────────────────╯
   ASPECT_RATIO:         ${{ github.event.client_payload.ASPECT_RATIO }} 
-  config:               'autoflip_graph_development.pbtxt'
+  # config:               'autoflip_graph_development.pbtxt'
   # config:               'autoflip_graph.pbtxt'
 
 
@@ -79,7 +79,7 @@ jobs:
       - name: Test the repository_dispatch fields
         run: |
           echo "VIDEO_URL: ${VIDEO_URL}"
-          echo "ASPECT_RATIO: ${ASPECT_RATIO}"
+          echo "ASPECT_RATIO: ${{ASPECT_RATIO}}"
 
 
 
@@ -93,12 +93,8 @@ jobs:
       - name: run autoflip
         run: |
 
-            # if [[ ${{ github.event.client_payload.TAGET_OUTPUT_FOLDER != '' }} == true ]]; then
-            #   TAGET_OUTPUT_FOLDER=${{ github.event.client_payload.TAGET_OUTPUT_FOLDER }}
-            # fi
-            
             cd /mediapipe
-            /bin/sh -c "bazel-bin/mediapipe/examples/desktop/autoflip/run_autoflip --calculator_graph_config_file=/mediapipe/mediapipe/examples/desktop/autoflip/${config} --input_side_packets=input_video_path=/video/${input_video},output_video_path=/video/${TARGET_OUTPUT_FOLDER}/${output_video},aspect_ratio=${ASPECT_RATIO},key_frame_crop_viz_frames_path=/video/${points_output},salient_point_viz_frames_path=/video/${frames_output}" || true
+            /bin/sh -c "bazel-bin/mediapipe/examples/desktop/autoflip/run_autoflip --calculator_graph_config_file=/mediapipe/mediapipe/examples/desktop/autoflip/autoflip_graph_development.pbtxt --input_side_packets=input_video_path=/video/${input_video},output_video_path=/video/${{TARGET_OUTPUT_FOLDER}}/${output_video},aspect_ratio=${ASPECT_RATIO},key_frame_crop_viz_frames_path=/video/${points_output},salient_point_viz_frames_path=/video/${frames_output}" || true
 
 
 
