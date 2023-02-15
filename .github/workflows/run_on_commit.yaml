@@ -133,5 +133,4 @@ jobs:
 
       - name: Trigger Google Script
         run: |
-          TARGET_URL="http://media.londonparkour.com/videos/${{ env.FOLDER_DATE }}/${{ env.FOLDER_CATEGORY }}/${TARGET_OUTPUT_FOLDER}/${output_video}"
-          curl "${SHEETS}?type=%22${ASPECT_RATIO}%22&category=%22${{ env.FOLDER_CATEGORY }}%22&date=%22${{ env.FOLDER_DATE }}%22&filename=%22${TARGET_URL}%22"
+          curl "${SHEETS}?type=%22${ASPECT_RATIO}%22&category=%22${{ env.FOLDER_CATEGORY }}%22&date=%22${{ env.FOLDER_DATE }}%22&filename=%22${TARGET_OUTPUT_FOLDER}/${output_video}%22"
