@@ -34,7 +34,12 @@ on:
 
 env:
 
-  
+
+  # ╭──────────────────────────────────────────────────────────╮
+  # │                Target Google Sheet Script                │
+  # ╰──────────────────────────────────────────────────────────╯
+  SHEETS: "https://script.google.com/macros/s/AKfycbwrzBUwTlj7gOJ87U0D0hQnkiRMMEwphLz-MPNw2mYrZw0FBEEOkTHkGp6QsQgKqRCK/exec"
+
   # ╭──────────────────────────────────────────────────────────╮
   # │                        Video URL                         │
   # │        1. Get Data from CURL request and webhook         │
@@ -113,7 +118,10 @@ jobs:
           ssh-keyscan -H ${{env.SERVER}} >> ~/.ssh/known_hosts
 
           FOLDER_DATE=$(echo $VIDEO_URL | cut -d / -f5)
+          echo "FOLDER_DATE=${FOLDER_DATE}" >> $GITHUB_ENV 
+
           FOLDER_CATEGORY=$(echo $VIDEO_URL | cut -d / -f6)
+          echo "FOLDER_CATEGORY=${FOLDER_CATEGORY}" >> $GITHUB_ENV 
 
           SOURCE_DIR="/video/${TARGET_OUTPUT_FOLDER}"
           TARGET_DIR="${TARGET_ROOT_FOLDER}/${FOLDER_DATE}/${FOLDER_CATEGORY}/"
@@ -125,6 +133,5 @@ jobs:
 
       - name: Trigger Google Script
         run: |
-          SCRIPT="https://script.google.com/macros/s/AKfycbwrzBUwTlj7gOJ87U0D0hQnkiRMMEwphLz-MPNw2mYrZw0FBEEOkTHkGp6QsQgKqRCK/exec"
-          TARGET_URL="http://media.londonparkour.com/videos/${FOLDER_DATE}/${FOLDER_CATEGORY}/${TARGET_OUTPUT_FOLDER}/${output_video}"
-          curl "${SCRIPT}?type=%22${ASPECT_RATIO}%22&category=%22${FOLDER_CATEGORY}%22&date=%22${FOLDER_DATE}%22&filename=%22${TARGET_URL}%22"
+          TARGET_URL="http://media.londonparkour.com/videos/${{ env.FOLDER_DATE }}/${{ env.FOLDER_CATEGORY }}/${TARGET_OUTPUT_FOLDER}/${output_video}"
+          curl "${SHEETS}?type=%22${ASPECT_RATIO}%22&category=%22${{ env.FOLDER_CATEGORY }}%22&date=%22${{ env.FOLDER_DATE }}%22&filename=%22${TARGET_URL}%22"
