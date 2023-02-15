@@ -133,4 +133,4 @@ jobs:
 
       - name: Trigger Google Script
         run: |
-          curl "${SHEETS}?type=%22${ASPECT_RATIO}%22&category=%22${{ env.FOLDER_CATEGORY }}%22&date=%22${{ env.FOLDER_DATE }}%22&filename=%22${TARGET_OUTPUT_FOLDER}/${output_video}%22"
+          curl "${SHEETS}?type=%22${TARGET_OUTPUT_FOLDER}%22&category=%22${{ env.FOLDER_CATEGORY }}%22&date=%22${{ env.FOLDER_DATE }}%22&filename=%22${output_video}%22"
