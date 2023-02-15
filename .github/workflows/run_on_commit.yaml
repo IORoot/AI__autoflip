@@ -122,3 +122,9 @@ jobs:
           echo "TARGET DIR: ${TARGET_DIR}"
 
           sshpass -p '${{secrets.PASSWORD}}' scp -v -p -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SOURCE_DIR} ${{secrets.USER}}@${{env.SERVER}}:${TARGET_DIR}
+
+      - name: Trigger Google Script
+        run: |
+          SCRIPT="https://script.google.com/macros/s/AKfycbwrzBUwTlj7gOJ87U0D0hQnkiRMMEwphLz-MPNw2mYrZw0FBEEOkTHkGp6QsQgKqRCK/exec"
+          TARGET_URL="http://media.londonparkour.com/videos/${FOLDER_DATE}/${FOLDER_CATEGORY}/${TARGET_OUTPUT_FOLDER}/${output_video}"
+          curl "${SCRIPT}?type=%22${ASPECT_RATIO}%22&category=%22${FOLDER_CATEGORY}%22&date=%22${FOLDER_DATE}%22&filename=%22${TARGET_URL}%22"
