@@ -1,4 +1,63 @@
-# Autoflip
+# Custom Autoflip Container
+
+This container is built to run in a github action.
+
+It has a few extra packages installed to aid in auto-processing videos for social media.
+
+## Extra packages:
+
+- FFMPEG 5.1.6 Has been installed
+- https://github.com/IORoot/ffmpeg__bash-scripts scripts are installed but always require a git pull to keep in sync with latest.
+- SSH
+- SSHPass
+- rSync
+- rClone (To copy files from Google Drive.)
+
+## rClone
+
+This requires a `~/.config/rclone/rclone.conf` file with the correct tokens to allow access to your google drive. DO NOT ADD INTO THE CONTAINER. Instead, add via a github secret through the github action.
+
+Place the config into a secret variable called `RCLONE_CONF` and should look like this: (with XXXX,YYYY,ZZZZ with correct details. See rClone docs for generating this file)
+
+```
+[GDrive]
+type = drive
+scope = drive
+token = {"access_token":"XXXXX,"token_type":"Bearer","refresh_token":"YYYYY","expiry":"2023-02-17T09:04:46.600879335Z"}
+team_drive = 
+root_folder_id = ZZZZZZZ
+```
+
+
+## Triggering
+
+This github action is meant to be triggered via a HTTP request that should be something like the following:
+
+```bash
+curl                                                            \                                    
+-X POST                                                         \                                   
+-H "Accept: application/vnd.github+json"                        \                  
+-H "Authorization: Bearer GITHUB_PAT_KEY"                       \                  
+-H "X-GitHub-Api-Version: 2022-11-28"                           \                    
+    https://api.github.com/repos/ioroot/AI__autoflip/dispatches \         
+    -d '{"event_type":"gdrive_video_convert","client_payload":{ \         
+            "GDRIVE_FOLDER":  "FOLDER/IN/GDRIVE/TO/USE",        \            
+            "TEMPLATE":"ft_simple_1-1.sh"                       \
+            }                                                   \
+        }'           
+```
+
+This triggers the github actions `event_type` to the `repository_dispatch` trigger and passes the `client_payload` as environment variables to be used further down.
+```
+repository_dispatch:
+    types: run_autoflip
+```
+
+
+
+
+
+## Autoflip Details
 Google Autoflip: An Open Source Framework for Intelligent Video Reframing https://ai.googleblog.com/2020/02/autoflip-open-source-framework-for.html
 
 Tool to crop video with machine learning based on MediaPipe v0.6.8.1 https://github.com/google/mediapipe/tree/de4fbc10e62001795741cb6d0200a17a94a29b0f
