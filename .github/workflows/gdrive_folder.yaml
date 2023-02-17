@@ -78,11 +78,11 @@ jobs:
             whoami
             mkdir -p ~/.config/rclone
             cd ~/.config/rclone
-            echo "${RCLONE_CONFIG}" > rclone.conf
             pwd
+            echo "${RCLONE_CONFIG}" > rclone.conf
+            ls -la
             cat ./rclone.conf || true
             cat /root/.config/rclone/rclone.conf || true
-            cat ~/.config/rclone/rclone.conf || true
 
 
       - name: rclone video from google drive
