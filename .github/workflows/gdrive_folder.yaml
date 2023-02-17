@@ -72,6 +72,7 @@ jobs:
 
       - name: setup rClone config
         run: |
+            mkdir -p ~/.config/rclone
             cd ~/.config/rclone
             cat ${{secrets.RCLONE_CONF}} > rclone.conf
 
@@ -80,6 +81,7 @@ jobs:
         run: |
             mkdir /raw_videos
             rclone copy GDrive:${GDRIVE_FOLDER_PREFIX}${GDRIVE_FOLDER} /raw_videos
+            ls -la /raw_videos
 
 
       - name: run ffmpeg template
