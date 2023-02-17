@@ -77,6 +77,9 @@ jobs:
             mkdir -p ~/.config/rclone
             cd ~/.config/rclone
             echo "${RCLONE_CONFIG}" > rclone.conf
+            cat ./rclone.conf
+            cat /root/.config/rclone/rclone.conf
+            cat ~/.config/rclone/rclone.conf
 
 
       - name: rclone video from google drive
