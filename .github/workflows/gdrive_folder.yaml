@@ -74,14 +74,12 @@ jobs:
         env:
           RCLONE_CONFIG: ${{ secrets.RCLONE_CONF }}
         run: |
-            pwd
-            whoami
-            mkdir -p ~/.config/rclone
-            cd ~/.config/rclone
-            pwd
+            cd /root/
+            mkdir -p /root/.config/rclone
+            cd /root/.config/rclone
             echo "${RCLONE_CONFIG}" > rclone.conf
             ls -la
-            cat ./rclone.conf || true
+            pwd
             cat /root/.config/rclone/rclone.conf || true
 
 
