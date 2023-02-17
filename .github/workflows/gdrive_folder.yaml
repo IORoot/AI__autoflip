@@ -74,12 +74,14 @@ jobs:
         env:
           RCLONE_CONFIG: ${{ secrets.RCLONE_CONF }}
         run: |
+            pwd
+            whoami
             mkdir -p ~/.config/rclone
             cd ~/.config/rclone
             echo "${RCLONE_CONFIG}" > rclone.conf
-            cat ./rclone.conf
-            cat /root/.config/rclone/rclone.conf
-            cat ~/.config/rclone/rclone.conf
+            cat ./rclone.conf || true
+            cat /root/.config/rclone/rclone.conf || true
+            cat ~/.config/rclone/rclone.conf || true
 
 
       - name: rclone video from google drive
