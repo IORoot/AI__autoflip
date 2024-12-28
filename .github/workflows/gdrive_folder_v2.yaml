@@ -15,7 +15,7 @@ on:
       ASPECT_RATIO:
         description: 'Aspect Ratio to output as.'
         required: true
-        default: '1:2'
+        default: '9:16'
       TARGET_OUTPUT_FOLDER:
         description: 'Where to upload the result to.'
         required: true
@@ -51,8 +51,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    container:
-      image: kendiyang401/autoflip
+    # container:
+    #   image: kendiyang401/autoflip
       
     steps:
 
@@ -67,11 +67,10 @@ jobs:
       # │                   OUTPUT VARIABLES                    │
       # ╰───────────────────────────────────────────────────────╯
       - name: ✅ Test the repository_dispatch fields
-        run: |
-            echo "GDRIVE_FOLDER: ${GDRIVE_FOLDER}"
-            echo "ASPECT_RATIO: ${ASPECT_RATIO}"
-            echo "TARGET_OUTPUT_FOLDER: ${TARGET_OUTPUT_FOLDER}"
-
+      run: |
+          echo "GDRIVE_FOLDER: ${GDRIVE_FOLDER}"
+          echo "ASPECT_RATIO: ${ASPECT_RATIO}"
+          echo "TARGET_OUTPUT_FOLDER: ${TARGET_OUTPUT_FOLDER}"
 
 
       # ╭───────────────────────────────────────────────────────╮
@@ -80,7 +79,6 @@ jobs:
       - name: 🎛️ SETUP - Base64 decode Configs
         run: |
           echo "${{ secrets.RCLONE_CONF }}" | base64 --decode > rclone.conf
-          echo "${{ secrets.ENV_B64 }}" | base64 --decode > .env
 
         
       # ╭───────────────────────────────────────────────────────╮
@@ -89,6 +87,32 @@ jobs:
       - name: 📹 DOWNLOAD - Install rClone
         run: |
           sudo apt install rclone
+
+
+          
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libopencv-core-dev \
+            libopencv-highgui-dev \
+            libopencv-calib3d-dev \
+            libopencv-features2d-dev \
+            libopencv-imgproc-dev \
+            libopencv-video-dev \
+            libopencv-contrib-dev \
+            wget
+  
+      - name: Install Bazelisk
+        run: |
+          wget https://github.com/bazelbuild/bazelisk/releases/download/v1.25.0/bazelisk-linux-amd64
+          chmod +x bazelisk-linux-amd64
+          sudo mv bazelisk-linux-amd64 /usr/local/bin/bazel       
+  
+  
+      - name: Build AutoFlip
+        run: |
+          bazel build -c opt --define MEDIAPIPE_DISABLE_GPU=1 mediapipe/examples/desktop/autoflip:run_autoflip
 
 
 
