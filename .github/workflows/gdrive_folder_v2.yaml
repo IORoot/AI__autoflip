@@ -1,0 +1,149 @@
+name: Autoflip GDrive Folder v2
+
+# ╭───────────────────────────────────────────────────────────────────────────╮
+# │      Target a Google Drive folder and process the videos within it.       │
+# ╰───────────────────────────────────────────────────────────────────────────╯
+
+on:
+
+  workflow_dispatch:
+    inputs:
+      GDRIVE_FOLDER:
+        description: 'Google Drive Folder to process'
+        required: true
+        default: '/FOLDER/IN/GDRIVE/TO/USE'
+      ASPECT_RATIO:
+        description: 'Aspect Ratio to output as.'
+        required: true
+        default: '1:2'
+      TARGET_OUTPUT_FOLDER:
+        description: 'Where to upload the result to.'
+        required: true
+        default: '/var/www/vhosts/media.londonparkour.com/videos'
+
+env:
+
+  # ╭──────────────────────────────────────────────────────────╮
+  # │                        Video URL                         │
+  # │        1. Get Data from CURL request and webhook         │
+  # │            2. or Get URL from commit message             │
+  # ╰──────────────────────────────────────────────────────────╯
+  GDRIVE_FOLDER:            ${{ github.event.client_payload.GDRIVE_FOLDER }} 
+  
+
+  # ╭──────────────────────────────────────────────────────────╮
+  # │                Aspect Ratio to output as.                │
+  # ╰──────────────────────────────────────────────────────────╯
+  ASPECT_RATIO:         ${{ github.event.client_payload.ASPECT_RATIO }} 
+
+
+  # ╭──────────────────────────────────────────────────────────╮
+  # │              Where to upload the result to.              │
+  # │                      - Server name                       │
+  # │                     - Target folder.                     │
+  # ╰──────────────────────────────────────────────────────────╯
+  TARGET_OUTPUT_FOLDER: ${{ github.event.client_payload.TARGET_OUTPUT_FOLDER}}
+
+
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    container:
+      image: kendiyang401/autoflip
+      
+    steps:
+
+      # ╭───────────────────────────────────────────────────────╮
+      # │             GET CONTENTS OF CURRENT REPO              │
+      # ╰───────────────────────────────────────────────────────╯
+      - name: 🎛️ SETUP - Checkout Repo
+        uses: actions/checkout@v3
+
+
+      # ╭───────────────────────────────────────────────────────╮
+      # │                   OUTPUT VARIABLES                    │
+      # ╰───────────────────────────────────────────────────────╯
+      - name: ✅ Test the repository_dispatch fields
+        run: |
+            echo "GDRIVE_FOLDER: ${GDRIVE_FOLDER}"
+            echo "ASPECT_RATIO: ${ASPECT_RATIO}"
+            echo "TARGET_OUTPUT_FOLDER: ${TARGET_OUTPUT_FOLDER}"
+
+
+
+      # ╭───────────────────────────────────────────────────────╮
+      # │      DECODE THE BASE64 CONFIGS READY TO BE USED       │
+      # ╰───────────────────────────────────────────────────────╯
+      - name: 🎛️ SETUP - Base64 decode Configs
+        run: |
+          echo "${{ secrets.RCLONE_CONF }}" | base64 --decode > rclone.conf
+          echo "${{ secrets.ENV_B64 }}" | base64 --decode > .env
+
+        
+      # ╭───────────────────────────────────────────────────────╮
+      # │                    Install rClone                     │
+      # ╰───────────────────────────────────────────────────────╯
+      - name: 📹 DOWNLOAD - Install rClone
+        run: |
+          sudo apt install rclone
+
+
+
+      # ╭───────────────────────────────────────────────────────╮
+      # │           COPY GDRIVE FOLDER ONTO CONTAINER           │
+      # ╰───────────────────────────────────────────────────────╯
+      - name: 🎁 rclone video from google drive
+        run: |
+          mkdir -p /video
+          cd /video
+          rclone copy GDrive:${GDRIVE_FOLDER} .
+          ls -la /video
+
+
+      # ╭───────────────────────────────────────────────────────╮
+      # │                          SSH                          │
+      # ╰───────────────────────────────────────────────────────╯
+      - name: 🪲 DEBUG - Setup upterm session
+        uses: lhotari/action-upterm@v1
+      
+
+
+      # ╭───────────────────────────────────────────────────────╮
+      # │                Upload to Google Drive                 │
+      # ╰───────────────────────────────────────────────────────╯
+      - name: 🌥️ Google Drive - upload
+        run: |
+          rclone copy ./video GDrive:/${TARGET_OUTPUT_FOLDER} || true  
+
+
+
+
+
+      # ╭──────────────────────────────────────────────────────────────────────────╮
+      # │                                                                          │░
+      # │                                                                          │░
+      # │                                DEBUGGERS                                 │░
+      # │                                                                          │░
+      # │                                                                          │░
+      # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+      # ╭───────────────────────────────────────────────────────╮
+      # │                         HTTP                          │
+      # ╰───────────────────────────────────────────────────────╯
+      # - uses: dsmirc/ngrok-tunnel-action@cd
+      #   name: 🪲 DEBUG - Setup NGROK Tunnel
+      #   with:
+      #     timeout: 1h
+      #     port: 8080
+      #     ngrok_authtoken: ${{ secrets.NGROK_AUTH_TOKEN }}
+      #     tunnel_type: http
+      #     save_url_to_filename: tunnelURL.md
+
+      # # ╭───────────────────────────────────────────────────────╮
+      # # │                          SSH                          │
+      # # ╰───────────────────────────────────────────────────────╯
+      # - name: 🪲 DEBUG - Setup upterm session
+      #   uses: lhotari/action-upterm@v1
