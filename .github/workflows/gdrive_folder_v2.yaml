@@ -67,10 +67,10 @@ jobs:
       # │                   OUTPUT VARIABLES                    │
       # ╰───────────────────────────────────────────────────────╯
       - name: ✅ Test the repository_dispatch fields
-      run: |
-          echo "GDRIVE_FOLDER: ${GDRIVE_FOLDER}"
-          echo "ASPECT_RATIO: ${ASPECT_RATIO}"
-          echo "TARGET_OUTPUT_FOLDER: ${TARGET_OUTPUT_FOLDER}"
+        run: |
+            echo "GDRIVE_FOLDER: ${GDRIVE_FOLDER}"
+            echo "ASPECT_RATIO: ${ASPECT_RATIO}"
+            echo "TARGET_OUTPUT_FOLDER: ${TARGET_OUTPUT_FOLDER}"
 
 
       # ╭───────────────────────────────────────────────────────╮
@@ -89,7 +89,7 @@ jobs:
           sudo apt install rclone
 
 
-          
+
       - name: Install dependencies
         run: |
           sudo apt-get update
